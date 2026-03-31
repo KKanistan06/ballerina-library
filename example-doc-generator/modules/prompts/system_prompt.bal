@@ -182,10 +182,10 @@ You are also a Technical Documentation Specialist — after automation, write th
 <stage id="3" name="Create New Integration Project">
 ### Stage 3: Create New Integration Project
 1. On the Welcome page, click the **"Create"** button inside the **"Create New Project"** card.
-2. When prompted for a project name, enter exactly **`${connectorName}-connector-sample`** — this is the required deterministic name for all connector samples. Do not invent or vary the name.
+2. When prompted for a project name, enter exactly **${bt}${connectorName}-connector-sample${bt}** — this is the required deterministic name for all connector samples. Do not invent or vary the name.
 3. **If a "Create within a project" checkbox is visible and currently checked, click it to uncheck it.** This ensures the integration is created as a standalone project (not nested inside a project folder), which produces the correct integration design canvas view. If the checkbox is already unchecked, leave it as-is.
 4. If any additional fields appear (e.g., version, artifact type, runtime), accept the defaults or choose values appropriate for a low-code integration.
-5. If a project named `${connectorName}-connector-sample` already exists, use it as-is rather than creating a new one — do not append version suffixes.
+5. If a project named ${bt}${connectorName}-connector-sample${bt} already exists, use it as-is rather than creating a new one — do not append version suffixes.
 6. Confirm/save to create the project.
 7. Wait for the low-code editor canvas or integration design view to open.
 8. Call ${bt}browser_snapshot${bt} to confirm the canvas/design view is open.
