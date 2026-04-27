@@ -1,4 +1,4 @@
-import connector_automator.utils;
+import wso2/connector_automation.utils;
 
 import ballerina/file;
 import ballerina/log;
