@@ -18,7 +18,7 @@ public function initAIService(boolean quietMode = false) returns error? {
         apiKey,
         anthropic:CLAUDE_SONNET_4_6,
         maxTokens = 128000,
-        timeout = 400000,
+        timeout = 1200,
         httpVersion = "1.1"
     );
     if provider is error {
@@ -54,7 +54,7 @@ public function callAIAdvanced(string userPrompt, string systemPrompt = "", int 
         cachedApiKey,
         anthropic:CLAUDE_SONNET_4_6,
         maxTokens = maxTokens,
-        timeout = 400000,
+        timeout = 1200,
         httpVersion = "1.1"
     );
     if provider is error {
