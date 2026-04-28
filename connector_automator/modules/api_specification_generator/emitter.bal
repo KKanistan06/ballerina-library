@@ -15,7 +15,7 @@
 
 import ballerina/file;
 import ballerina/io;
-import wso2/connector_automation.utils;
+import wso2/connector_automator.utils;
 
 # Write the Ballerina specification source to a .bal file.
 #

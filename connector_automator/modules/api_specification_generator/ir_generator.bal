@@ -15,7 +15,7 @@
 
 import ballerina/io;
 import ballerina/regex;
-import wso2/connector_automation.utils;
+import wso2/connector_automator.utils;
 
 # Generate an IntermediateRepresentation by sending the raw metadata JSON
 # to the LLM and parsing its structured IR JSON response.

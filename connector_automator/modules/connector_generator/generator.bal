@@ -2,10 +2,10 @@ import ballerina/io;
 import ballerina/regex;
 import ballerina/time;
 
-import wso2/connector_automation.api_specification_generator as api;
-import wso2/connector_automation.utils;
-import wso2/connector_automation.code_fixer as fixer;
-import wso2/connector_automation.sdkanalyzer as analyzer;
+import wso2/connector_automator.api_specification_generator as api;
+import wso2/connector_automator.utils;
+import wso2/connector_automator.code_fixer as fixer;
+import wso2/connector_automator.sdkanalyzer as analyzer;
 
 # Generate connector artifacts from metadata JSON, IR JSON, and API spec.
 #

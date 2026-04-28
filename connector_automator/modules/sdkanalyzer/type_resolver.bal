@@ -14,7 +14,7 @@
 // under the License.
 
 import ballerina/regex;
-import wso2/connector_automation.utils;
+import wso2/connector_automator.utils;
 
 # Resolve an underlying Request/Response ClassInfo from a parameter
 #

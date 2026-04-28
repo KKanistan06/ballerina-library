@@ -15,7 +15,7 @@
 
 import ballerina/io;
 import ballerina/time;
-import wso2/connector_automation.utils;
+import wso2/connector_automator.utils;
 
 # Generate a Ballerina API Specification from raw sdk_analyzer metadata.
 # This is the primary entry point for the module.

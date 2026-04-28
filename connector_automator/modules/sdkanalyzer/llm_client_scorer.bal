@@ -15,7 +15,7 @@
 // under the License.
 
 import ballerina/regex;
-import wso2/connector_automation.utils;
+import wso2/connector_automator.utils;
 
 # Calculate LLM-based client score for a class using LLM's own knowledge.
 #

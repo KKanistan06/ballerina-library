@@ -16,7 +16,7 @@
 import ballerina/io;
 import ballerina/log;
 import ballerina/regex;
-import wso2/connector_automation.utils;
+import wso2/connector_automator.utils;
 
 # Use Anthropic LLM to find root client class using weighted scoring
 #

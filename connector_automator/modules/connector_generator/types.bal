@@ -1,5 +1,5 @@
-import wso2/connector_automation.sdkanalyzer as analyzer;
-import wso2/connector_automation.api_specification_generator as api;
+import wso2/connector_automator.sdkanalyzer as analyzer;
+import wso2/connector_automator.api_specification_generator as api;
 
 # Configuration for connector generation.
 public type ConnectorGeneratorConfig record {|

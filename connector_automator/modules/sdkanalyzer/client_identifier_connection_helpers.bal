@@ -16,7 +16,7 @@
 import ballerina/io;
 import ballerina/log;
 import ballerina/os;
-import wso2/connector_automation.utils;
+import wso2/connector_automator.utils;
 
 # Check if a type name is a primitive or standard Java type
 #
