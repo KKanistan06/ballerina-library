@@ -50,10 +50,10 @@ public function parseInitPattern(string responseText) returns string {
         return "instance-factory";
     } else if lower.includes("factory") {
         return "static-factory";
-    } else if lower.includes("constructor") {
-        return "constructor";
     } else if lower.includes("no-constructor") || lower.includes("no constructor") {
         return "no-constructor";
+    } else if lower.includes("constructor") {
+        return "constructor";
     }
 
     return "";

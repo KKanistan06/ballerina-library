@@ -147,6 +147,7 @@ public class JavadocExtractor {
                     }
 
                 } catch (Exception e) {
+                    System.err.println("Failed to parse Javadoc entry: " + name + " - " + e.getMessage());
                 }
             }
         } catch (Exception e) {
@@ -305,6 +306,7 @@ public class JavadocExtractor {
                     }
 
                 } catch (Exception e) {
+                    System.err.println("Failed to parse Javadoc entry: " + name + " - " + e.getMessage());
                 }
             }
         } catch (Exception e) {

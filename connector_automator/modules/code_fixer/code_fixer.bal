@@ -228,7 +228,7 @@ function isEligibleBallerinaSourcePath(string path) returns boolean {
         lower.includes("/build/") {
         return false;
     }
-    return lower.endsWith("client.bal") || lower.endsWith("types.bal") || lower.endsWith("main.bal");
+    return lower.endsWith("client.bal") || lower.endsWith("types.bal") || lower.endsWith("main.bal") || lower.endsWith("test.bal");
 }
 
 function isInteropClassNotFoundError(CompilationError err) returns boolean {
@@ -243,11 +243,11 @@ function executeShellCommand(string workingDir, string shellCommand) returns rec
     string stdoutPath = check file:joinPath(workingDir, stdoutFile);
     string stderrPath = check file:joinPath(workingDir, stderrFile);
 
-    string command = string `cd "${workingDir}" && ${shellCommand} > "${stdoutFile}" 2> "${stderrFile}"`;
+    string script = string `cd "$0" && ${shellCommand} > "$1" 2> "$2"`;
     os:Process process = check os:exec({
-                                           value: "bash",
-                                           arguments: ["-c", command]
-                                       });
+        value: "bash",
+        arguments: ["-c", script, workingDir, stdoutFile, stderrFile]
+    });
 
     int exitCode = check process.waitForExit();
 
@@ -1550,7 +1550,7 @@ function getBackupPath(string fullFilePath) returns string {
 
 function cleanupFixerBackups(string projectPath, boolean quietMode = true) returns error? {
     record {|int exitCode; string stdout; string stderr;|}|error cleanupResult =
-        executeShellCommand(projectPath, "find . -type f -name '*_backup*' -print -delete");
+        executeShellCommand(projectPath, "find . -type f -name '*_backup*.bak' -print -delete");
     if cleanupResult is error {
         return cleanupResult;
     }
@@ -1667,15 +1667,13 @@ public function fixAllErrors(string projectPath, boolean quietMode = true, boole
             }
         }
 
-        if currentErrors.length() == 0 {
-            log:printInfo("Ballerina build produced no parseable errors", projectPath = projectPath);
-            result.success = true;
-            result.errorsRemaining = 0;
-            result.errorsFixed = initialErrorCountSet ? initialErrorCount : 0;
 
-            if !quietMode {
-                io:println("✓ No compilation errors detected");
-            }
+        if currentErrors.length() == 0 {
+            log:printInfo("Ballerina build still failed outside the fixer allowlist", projectPath = projectPath);
+            result.success = false;
+            result.errorsRemaining = parsedErrors.length() > 0 ? parsedErrors.length() : 1;
+            result.errorsFixed = initialErrorCountSet ? initialErrorCount : 0;
+            result.remainingFixes.push(string `Build still fails outside the fixer allowlist. ${summarizeDiagnostics(diagnostics)}`);
             return result;
         }
 

@@ -160,6 +160,9 @@ public function extractRequestFields(ClassInfo requestClass) returns RequestFiel
     map<boolean> addedFields = {};
 
     foreach MethodInfo method in requestClass.methods {
+        if method.isStatic {
+            continue;
+        }
         if method.parameters.length() == 0 && method.returnType != "void" &&
             method.name != "toString" && method.name != "hashCode" &&
             method.name != "equals" && method.name != "getClass" {
@@ -684,8 +687,9 @@ public function addRequestFieldDescriptions(RequestFieldInfo[] fields) returns R
         Return ONLY the descriptions, one per line, in the same order as the input fields.
         Do not include field names or numbers, just pure descriptions.`;
 
-    string userPrompt = string `Provide one-line descriptions for these request fields:\n\n" + fieldList
-        "\nDescriptions (one per line, in same order):`;
+    string userPrompt = string `Provide one-line descriptions for these request fields:
+        ${fieldList}
+        Descriptions (one per line, in same order):`;
 
     string|error responseResult = utils:callAIAdvanced(userPrompt, systemPrompt, 5000);
 

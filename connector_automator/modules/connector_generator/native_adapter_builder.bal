@@ -2,40 +2,14 @@ import wso2/connector_automator.sdkanalyzer as analyzer;
 
 # Build Java native adaptor source from method mappings.
 #
-# + mappings - Method mappings between API spec methods and metadata-described native methods, used to generate method bodies that invoke the correct underlying native methods. 
+# + mappings - Method mappings between API spec methods and metadata-described native methods, used to generate method bodies that invoke the correct underlying native methods.
 # + metadata - Structured native-library metadata, used to get the root client name for native adaptor generation.
-# + return - Generated Java source code for the native adaptor class, with method stubs for each mapped API spec method.
+# + return - Generated Java source code for the native adaptor class, or an error if invocation synthesis is not available.
 public function buildNativeAdaptorJava(MethodMapping[] mappings,
-        analyzer:StructuredSDKMetadata metadata) returns string {
-    string sdkClientName = metadata.rootClient.simpleName;
-    string packageLine = "package io.ballerina.connector.automator.connectorgenerator;";
-    string[] lines = [
-        packageLine,
-        "",
-        string `public class Native${sdkClientName}Adaptor {`,
-        string `    private final ${sdkClientName} sdkClient;`,
-        "",
-        string `    public Native${sdkClientName}Adaptor() {`,
-        "        this.sdkClient = null;",
-        "    }"
-    ];
-
-    foreach MethodMapping mapping in mappings {
-        SpecMethodSignature specMethod = mapping.specMethod;
-        string javaMethodName = specMethod.name;
-        analyzer:MethodInfo? candidate = mapping.javaMethod;
-        if candidate is analyzer:MethodInfo {
-            javaMethodName = candidate.name;
-        }
-        lines.push("");
-        lines.push(string `    public Object ${specMethod.name}(Object... args) {`);
-        lines.push(string `        // mapped native method: ${javaMethodName}`);
-        lines.push("        throw new UnsupportedOperationException(\"TODO: implement native adaptor invocation\");");
-        lines.push("    }");
-    }
-
-    lines.push("}");
-    return string:'join("\n", ...lines);
+        analyzer:StructuredSDKMetadata metadata) returns string|error {
+    return error(string `Native adaptor invocation synthesis is not implemented for '${metadata.rootClient.simpleName}'; ` +
+        "connector generation cannot produce a functional adaptor via the static builder path. " +
+        "Use the LLM-based generation path instead.");
 }
 
 # Build method mappings by matching API spec names to metadata root client methods.

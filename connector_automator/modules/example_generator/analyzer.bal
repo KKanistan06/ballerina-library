@@ -953,45 +953,12 @@ function firstNonEmptyLine(string text) returns string {
 }
 
 function tryUseExistingNativeJar(string connectorPath) returns boolean|error {
-    string datasetKey = extractDatasetKey(connectorPath);
-    if datasetKey.trim().length() == 0 {
-        return false;
+    string existingJar = check file:joinPath(connectorPath, "build", "libs", "generated-native-adaptor.jar");
+    boolean|error jarExists = file:test(existingJar, file:EXISTS);
+    if jarExists is error {
+        return jarExists;
     }
-
-    string fallbackJar = string `/home/kanistan/JavaPhaser/modules/connector_generator/output/${datasetKey}/native/build/libs/generated-native-adaptor.jar`;
-    boolean|error fallbackExists = file:test(fallbackJar, file:EXISTS);
-    if fallbackExists is error {
-        return fallbackExists;
-    }
-    if !fallbackExists {
-        return false;
-    }
-
-    int|error copyExit = runShellInDir(connectorPath,
-        string `mkdir -p build/libs && cp "${fallbackJar}" "build/libs/generated-native-adaptor.jar"`);
-    if copyExit is error {
-        return copyExit;
-    }
-
-    return copyExit == 0;
-}
-
-function extractDatasetKey(string connectorPath) returns string {
-    string trimmed = connectorPath.trim();
-    if trimmed.endsWith("/") {
-        trimmed = trimmed.substring(0, trimmed.length() - 1);
-    }
-
-    if trimmed.endsWith("/native") {
-        trimmed = trimmed.substring(0, trimmed.length() - 7);
-    }
-
-    int? idx = trimmed.lastIndexOf("/");
-    if idx is int && idx < trimmed.length() - 1 {
-        return trimmed.substring(<int>idx + 1, trimmed.length());
-    }
-
-    return trimmed;
+    return jarExists;
 }
 
 function ensureBuildGradleCompatibility(string connectorPath) returns error? {

@@ -63,6 +63,9 @@ public type ParsedApiSpec record {|
     string headerAndTypes;
     # List of client method signatures defined in the API spec, to be implemented in `client.bal`.
     SpecMethodSignature[] clientMethods;
+    # Name of the connection configuration type found in the spec's init() signature.
+    # Defaults to "ConnectionConfig" when the init signature cannot be parsed.
+    string configTypeName = "ConnectionConfig";
 |};
 
 # Connector generation result.

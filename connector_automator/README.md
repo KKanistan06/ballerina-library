@@ -89,7 +89,7 @@ bal run -- sdk pipeline <dataset-key> <output-dir> [options]
 **Arguments:**
 - `<dataset-key>` — Identifies the SDK; must match JAR files in `test-jars/`:
   - `test-jars/<dataset-key>.jar` — SDK JAR
-  - `test-jars/<dataset-key>-javadoc.jar` — Javadoc JAR (optional but recommended)
+  - `test-jars/<dataset-key>-javadoc.jar` — Javadoc JAR
 - `<output-dir>` — Root directory where all generated artifacts are written
 
 **Options:**

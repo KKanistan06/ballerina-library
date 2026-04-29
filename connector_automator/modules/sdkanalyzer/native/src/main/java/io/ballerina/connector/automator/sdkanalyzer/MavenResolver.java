@@ -326,13 +326,31 @@ public class MavenResolver {
             properties.putIfAbsent("revision", projectVersion);
         }
         
-        // Get dependencies element
+        // Get dependencies element whose direct parent is <project>, not <dependencyManagement>
         NodeList dependenciesList = doc.getElementsByTagName("dependencies");
         if (dependenciesList.getLength() == 0) {
             return dependencies;
         }
-        
-        Element dependenciesElement = (Element) dependenciesList.item(0);
+
+        Element dependenciesElement = null;
+        for (int i = 0; i < dependenciesList.getLength(); i++) {
+            Node candidate = dependenciesList.item(i);
+            if (candidate.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            String parentName = candidate.getParentNode().getLocalName();
+            if (parentName == null) {
+                parentName = candidate.getParentNode().getNodeName();
+            }
+            if ("project".equals(parentName)) {
+                dependenciesElement = (Element) candidate;
+                break;
+            }
+        }
+        if (dependenciesElement == null) {
+            return dependencies;
+        }
+
         NodeList dependencyList = dependenciesElement.getElementsByTagName("dependency");
         
         for (int i = 0; i < dependencyList.getLength(); i++) {

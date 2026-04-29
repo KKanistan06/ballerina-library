@@ -40,6 +40,9 @@ public function resolveSDKReference(string sdkRef, AnalyzerConfig? config = ()) 
             options["resolveDependencies"] = config.resolveDependencies;
         }
 
+        if regex:split(sdkRef, ":").length() < 3 {
+            return error(string `Maven coordinate must be in groupId:artifactId:version format (e.g. 'software.amazon.awssdk:s3:2.31.66'), got: '${sdkRef}'`);
+        }
         json result = check resolveMavenArtifactWithOptions(sdkRef, options);
         map<json> resolved = <map<json>>result;
         int depCount = resolved.hasKey("allJars") ? (<json[]>resolved["allJars"]).length() : 0;
@@ -842,7 +845,7 @@ function inferMavenCoordinateFromJarPath(string jarPath) returns string? {
 
 # Attempt to resolve the transitive dependency JAR paths for the given Maven coordinate.
 #
-# + coordinate - Maven coordinate (e.g. "sqs:2.31.66" or "group:artifact:version")
+# + coordinate - Maven coordinate in the form "groupId:artifactId:version"
 # + maxDepth - Maximum transitive dependency depth
 # + return - List of resolved JAR file paths (may be empty)
 function resolveTransitiveJarPaths(string coordinate, int maxDepth) returns string[] {
@@ -852,6 +855,9 @@ function resolveTransitiveJarPaths(string coordinate, int maxDepth) returns stri
         resolveDependencies: true
     };
     do {
+        if regex:split(coordinate, ":").length() < 3 {
+            return [];
+        }
         json result = check resolveMavenArtifactWithOptions(coordinate, options);
         map<json> resolved = check result.ensureType();
         if !resolved.hasKey("allJars") {

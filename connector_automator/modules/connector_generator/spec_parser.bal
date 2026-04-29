@@ -16,6 +16,7 @@ public function parseApiSpec(string apiSpecPath) returns ParsedApiSpec|error {
     string clientBlock = content.substring(<int>classIdx);
 
     SpecMethodSignature[] methods = [];
+    string configTypeName = "ConnectionConfig";
     string[] lines = regex:split(clientBlock, "\n");
     foreach string rawLine in lines {
         string line = rawLine.trim();
@@ -24,12 +25,18 @@ public function parseApiSpec(string apiSpecPath) returns ParsedApiSpec|error {
             if parsed is SpecMethodSignature {
                 methods.push(parsed);
             }
+        } else if line.includes("function init(") {
+            string extracted = extractInitConfigType(line);
+            if extracted.length() > 0 {
+                configTypeName = extracted;
+            }
         }
     }
 
     return {
         headerAndTypes: headerAndTypes,
-        clientMethods: methods
+        clientMethods: methods,
+        configTypeName: configTypeName
     };
 }
 
@@ -146,4 +153,25 @@ function parseParameter(string rawParam) returns SpecMethodParameter|error {
         name: pName,
         isConfigSpread: isConfigSpread
     };
+}
+
+// Extract the config type name from an init signature line.
+function extractInitConfigType(string line) returns string {
+    int? parenOpen = line.indexOf("(");
+    int? parenClose = line.indexOf(")");
+    if parenOpen is () || parenClose is () || <int>parenClose <= <int>parenOpen + 1 {
+        return "";
+    }
+    string paramSegment = line.substring(<int>parenOpen + 1, <int>parenClose).trim();
+    if paramSegment.length() == 0 {
+        return "";
+    }
+    // Strip leading spread operator if present
+    string segment = paramSegment.startsWith("*") ? paramSegment.substring(1).trim() : paramSegment;
+    // The type is everything up to the last space (name follows)
+    int? lastSpace = segment.lastIndexOf(" ");
+    if lastSpace is () {
+        return segment; // entire segment is the type
+    }
+    return segment.substring(0, <int>lastSpace).trim();
 }
